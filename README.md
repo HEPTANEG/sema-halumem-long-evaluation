@@ -1,5 +1,7 @@
 # Sema HaluMem-Long Evaluation
 
+**[English](README.md) | [简体中文](README.zh-CN.md)**
+
 This repository records a reproducible single-user HaluMem-Long long-term
 memory experiment with Sema. It is a public-safe snapshot: benchmark-derived
 dialogue, questions, answers, and per-question evidence are intentionally

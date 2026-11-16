@@ -1,5 +1,7 @@
 # Sema HaluMem-Long 评测
 
+**[English](README.md) | [简体中文](README.zh-CN.md)**
+
 本仓库记录了使用 Sema 进行的一次可复现的单用户 HaluMem-Long 长期记忆实验。本仓库是一个公开安全快照：基准测试产生的对话、问题、答案和逐题证据均被明确排除。
 
 ## 结果
