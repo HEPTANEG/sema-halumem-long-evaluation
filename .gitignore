@@ -1,0 +1,24 @@
+# Sema runtime state and local secrets
+**/.sema/
+**/.env
+*.env
+
+# Runtime logs and temporary files
+*.log
+*.tmp
+*.bak
+__pycache__/
+.pytest_cache/
+
+# Local editor and operating-system files
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+
+# Evaluation caches; keep curated reports and manifests tracked
+Evaluation/**/cache/
+Evaluation/**/tmp/
+
+# Learning-time scratch work; retain locally, exclude from evidence commits
+**/work/

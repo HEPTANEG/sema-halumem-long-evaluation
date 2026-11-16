@@ -1,0 +1,84 @@
+{
+  "experiment": "MY_Test2",
+  "status": "evaluation_completed",
+  "created_at_utc": "2026-11-15T11:48:23.5705053Z",
+  "dataset": {
+    "name": "HaluMem-Long single-user learning set",
+    "user_id": "2f1f897e-d67f-dbc5-6a7b-b7634a9e294f",
+    "session_files": 115,
+    "total_bytes": 5075017,
+    "representation": "dialogue_only",
+    "excluded_fields": [
+      "memory_points",
+      "questions",
+      "memory_points_count",
+      "question_count"
+    ]
+  },
+  "paths": {
+    "learning_data": "LearningData/",
+    "sema_workspace": "Sema/",
+    "placeholder": "Sema/Placeholder text for test.txt",
+    "answer_sheet": "Evaluation/Manual Answers.md",
+    "evaluation": "Evaluation/"
+  },
+  "tracking": {
+    "local_git": "enabled",
+    "github_remote": "not_configured",
+    "initial_commit": "82ed69b8d7e5435b0faa9e11a09ab01e5c3f6a2e"
+  },
+  "learning_completed_at_utc": "2026-11-15T12:29:13.8554271Z",
+  "learning_data_status": "moved_out_after_learning",
+  "runtime_state_status": "present_locally_ignored_by_git",
+  "learning_scratch_status": "removed_before_exam",
+  "learning_scratch_removed_at_utc": "2026-11-15T12:34:23.9028092Z",
+  "exam_status": "completed",
+  "runtime_configuration": {
+    "profile": "developer",
+    "stm_budget_tokens": 10000,
+    "wm_budget_tokens": 10000,
+    "ltm_maintainer_activation_threshold_slots": 100,
+    "permission_policy": "unattended",
+    "answer_max_words": 20,
+    "learning_data_removed_before_exam": true
+  },
+  "model_configuration": {
+    "configured_model": "deepseek-chat",
+    "observed_api_model_id": "deepseek-flash",
+    "observed_api_model_name": "DeepSeek V4 Flash",
+    "secondary_reviewer": "Codex / GPT-5.6 Luna XHigh"
+  },
+  "latest_evaluation": {
+    "scope": "full_single_user",
+    "session_count": 115,
+    "question_count": 164,
+    "status": "completed",
+    "accuracy": 0.6341463414634146,
+    "hallucination_rate": 0.2926829268292683,
+    "omission_rate": 0.07317073170731707,
+    "evaluator_inconclusive": 0,
+    "official_commit": "718f16ff0c83413b1c86fa83fc13cc1a639871f9",
+    "model": "deepseek-chat",
+    "judge_model": "deepseek-chat",
+    "run_directory": "Evaluation/full-115-sessions-20261116T000000Z",
+    "completed_at_utc": "2026-11-16T00:00:00Z"
+  },
+  "secondary_review": {
+    "status": "manual_audit",
+    "policy": "favorable_estimate",
+    "accuracy": 0.8902439024390244,
+    "hallucination_rate": 0.04878048780487805,
+    "omission_rate": 0.06097560975609756,
+    "question_count": 164,
+    "official_score_unchanged": true,
+    "leaderboard_score": false
+  },
+  "answered_questions": 164,
+  "public_release": {
+    "raw_halu_mem_data_included": false,
+    "derived_dialogue_included": false,
+    "full_evidence_branch": "main",
+    "public_branch": "codex/public-release",
+    "leaderboard_submission": false
+  }
+}
