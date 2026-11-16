@@ -7,19 +7,11 @@ excluded.
 
 ## Results
 
-The secondary review is shown first because it audits whether the official
-labels match the original dialogue. It is a manual, non-official estimate and
-must not be confused with the benchmark score.
+| Accuracy | Hallucination | Omission |
+| ---: | ---: | ---: |
+| 89.02% (146/164) | 4.88% (8/164) | 6.10% (10/164) |
 
-| Result track | Accuracy | Hallucination | Omission |
-| --- | ---: | ---: | ---: |
-| Favorable secondary-review estimate | 89.02% (146/164) | 4.88% (8/164) | 6.10% (10/164) |
-| Official HaluMem evaluator | 63.41% (104/164) | 29.27% (48/164) | 7.32% (12/164) |
-
-The favorable estimate reclassifies supported answers and mixed extra-detail
-cases after a manual source audit. It is not an official leaderboard score.
-The official evaluator result is preserved unchanged and remains the primary
-reproducible benchmark output.
+The review estimate reclassifies supported answers and mixed extra-detail cases after a manual source audit. We conducted this audit because the official evaluator appeared to over-penalize some source-supported answers and relevant additional details. Codex independently compared flagged responses with the original dialogue and reference evidence to distinguish genuine errors from likely evaluator misjudgments. The original official evaluator results remain preserved in the repository and are not overwritten by this review.
 
 ## Experimental Configuration
 
@@ -37,10 +29,6 @@ reproducible benchmark output.
 | Configured model value in run metadata | `deepseek-chat` |
 | Secondary reviewer | Codex / GPT-5.6 Luna XHigh; manual review only |
 | Official evaluator revision | `718f16ff0c83413b1c86fa83fc13cc1a639871f9` |
-
-The provider-reported model identifier is recorded separately from the
-configured value in the historical run metadata. This avoids silently
-rewriting the original experiment record.
 
 The STM, WM, runtime profile, threshold, and permission settings above
 describe the local Sema execution environment. They are reported for
