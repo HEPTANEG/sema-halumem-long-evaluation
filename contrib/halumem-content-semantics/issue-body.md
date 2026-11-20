@@ -1,14 +1,19 @@
 # Clarify QA evidence scope, reference conflicts, and source-supported extra details
 
-## Context
+## Summary
 
 We evaluated one HaluMem-Long user across 115 ordered sessions and 164
 questions using the official-compatible evaluator revision
 `718f16ff0c83413b1c86fa83fc13cc1a639871f9`.
 
-The official three-way QA result remains unchanged. We are not proposing to
-replace the official leaderboard score. We performed a separate manual source
-audit to understand non-Correct cases. The audit classified the cases as:
+The unchanged official QA result was:
+
+| Correct | Hallucination | Omission |
+| ---: | ---: | ---: |
+| 104/164 (63.41%) | 48/164 (29.27%) | 12/164 (7.32%) |
+
+We then performed a manual source audit of every non-Correct item. This audit
+is not an alternative leaderboard score. It classified the items as:
 
 - 8 confirmed errors;
 - 10 confirmed omissions;
@@ -16,59 +21,73 @@ audit to understand non-Correct cases. The audit classified the cases as:
 - 17 mixed-scope or extra-detail cases; and
 - 1 reference conflict.
 
-These counts are diagnostic observations from one private run, not a new
-official score. We do not include HaluMem dialogue, questions, answers, or
-derived evidence in this issue. We can provide source identifiers and private
-verification details to the maintainers if useful.
+The purpose of this report is to clarify the intended evaluation contract, not
+to request that our result replace the official score.
 
-The current evaluator passes the QA judge the question, reference answer, key
-memory points, and system response. The complete source history is not passed
-to the QA judge. See the current evaluator implementation and prompt:
+## Representative cases
+
+The identifiers below use the dataset's `session_index:question_index` form.
+They are provided so that maintainers can locate the cases in the official
+dataset. We intentionally do not reproduce the original questions, answers,
+dialogue, or evidence text.
+
+| Case | Official label | Manual audit finding | Specific issue |
+| --- | --- | --- | --- |
+| `0:2` | Hallucination | `mixed_scope_or_extra` | The core negative answer is supported, but the response adds a later date that is not established by the question's session. |
+| `2:1` | Hallucination | `likely_misjudgment` | The core negative answer is correct; additional employment and financial details are supported by the source but are narrower than the compressed reference answer. |
+| `15:1` | Hallucination | `confirmed_error` | The response gives a definite value that exists in an earlier session, while the current session's reference is Unknown. This is a genuine session-boundary error. |
+| `15:7` | Omission | `confirmed_omission` | The source records the relevant influence on a career transition, but the response says the information is unknown. |
+| `18:0` | Hallucination | `confirmed_error` | The source supports one class of physical activity, while the response substitutes a different activity through unsupported inference. |
+| `18:2` | Omission | `confirmed_omission` | The source explicitly records the activity, but the response says it cannot recall it. |
+| `22:0` | Hallucination | `likely_misjudgment` | The response preserves the requested non-violent and cognitive-benefit direction, but adds a specific example not present in the compressed reference. |
+| `114:1` | non-Correct | `reference_conflict` | The source dialogue and the released reference disagree on a date; the system response follows the source dialogue. |
+
+These cases show that the negative labels are not all the same phenomenon:
+some are genuine memory or reasoning errors, while others depend on the
+evidence window or on a conflict between the source and reference.
+
+## Current evaluator contract
+
+The current evaluator passes the QA judge only:
+
+```text
+question
+reference_answer
+key_memory_points
+system_response
+```
+
+The complete source history is not passed to the QA judge. This is visible in
+the current evaluator implementation and prompt:
 
 - <https://github.com/MemTensor/HaluMem/blob/main/eval/evaluation.py>
 - <https://github.com/MemTensor/HaluMem/blob/main/eval/eval_tools.py>
 
-We prepared public synthetic cases in
-`contrib/halumem-content-semantics/synthetic_cases.jsonl` to isolate the
-semantic boundaries without redistributing benchmark-derived content.
+This creates two concrete questions:
 
-## Questions for maintainers
+1. If a memory object merges facts from several sessions, is QA evidence
+   intentionally limited to the current session, or should the judge be able
+   to verify the object's complete source history?
+2. If an answer's core conclusion is correct and an additional detail is
+   supported by the source history, but that detail is absent from the
+   reference answer and key memory points, should it be Correct, Hallucination,
+   or a separate diagnostic category?
 
-### 1. Reference conflict
+The current prompt says that irrelevant extra information should not by
+itself be treated as hallucination, but also restricts judgment to the
+reference answer and key memory points. We would appreciate clarification of
+how these rules are intended to interact.
 
-If the original dialogue and key memory points support fact A, but the
-reference answer states fact B, which source is authoritative?
+## Reference conflicts
 
-Should such a case:
+For a case such as `114:1`, where the dialogue and reference disagree, which
+source is authoritative?
+
+Should a reference conflict:
 
 - receive a separate `ReferenceConflict` diagnosis;
 - be excluded from the valid score; or
 - be corrected in the released reference data?
-
-### 2. Evidence scope for cross-session memories
-
-If a memory object merges facts from multiple sessions, should QA evaluation
-remain limited to the current session's key memory points, or may the judge
-use the complete source history for that memory object?
-
-More specifically:
-
-- Is QA intended to be session-local or user-history based?
-- How should a merged memory expose source evidence from earlier sessions?
-- If a fact is supported by the user's history but absent from the current key
-  memory points, is it valid evidence for the answer?
-
-### 3. Source-supported extra detail
-
-If the core answer is correct and an additional detail is supported by the
-source history, but the detail is absent from the reference answer and key
-memory points, should the result be `Correct`, `Hallucination`, or a separate
-diagnostic category such as `SupportedExtra`?
-
-The current prompt says that irrelevant extra information should not by itself
-be treated as hallucination, but it also restricts the evaluation to the
-reference answer and key memory points. We would appreciate clarification of
-how these rules are intended to interact.
 
 ## Proposed backwards-compatible direction
 
@@ -83,8 +102,17 @@ audit output with labels such as:
 - `PartialAnswer`.
 
 The audit output would explain a negative label without changing the official
-score or leaderboard comparability. We would be happy to prepare a small PR
-with synthetic regression fixtures after the intended semantics are
-confirmed.
+score or leaderboard comparability. The public synthetic fixtures are here:
+
+<https://github.com/HEPTANEG/sema-halumem-long-evaluation/tree/codex/halumem-content-semantics/contrib/halumem-content-semantics>
+
+We can provide additional source identifiers and private verification details
+to the maintainers if needed. We do not redistribute HaluMem-derived dialogue
+or evidence. This is consistent with the licensing clarification in Issue
+`#13`.
+
+After the intended semantics are confirmed, we would be happy to prepare a
+small PR with synthetic regression fixtures and an optional audit mode. The
+official mode would remain unchanged.
 
 Thank you for clarifying the expected evaluation contract.
