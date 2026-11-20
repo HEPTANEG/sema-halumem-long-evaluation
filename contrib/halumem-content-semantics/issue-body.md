@@ -3,8 +3,13 @@
 ## Summary
 
 We evaluated one HaluMem-Long user across 115 ordered sessions and 164
-questions using the official-compatible evaluator revision
-`718f16ff0c83413b1c86fa83fc13cc1a639871f9`.
+questions using the HaluMem dataset and evaluation code at commit
+[`718f16ff0c83413b1c86fa83fc13cc1a639871f9`](https://github.com/MemTensor/HaluMem/commit/718f16ff0c83413b1c86fa83fc13cc1a639871f9).
+
+HaluMem is the benchmark and evaluator under discussion; Sema was only the
+system under test. We did not modify the HaluMem evaluator. The commit above
+identifies the HaluMem repository version used for the run, not a Sema
+repository or project commit.
 
 The unchanged official QA result was:
 
